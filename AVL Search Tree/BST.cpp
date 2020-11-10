@@ -119,7 +119,9 @@ TNode *BST::remove(string last, string first){ // changed parameters to take in 
 		while (temp->right != NULL){ // goes through the right branch, finds the node to replace
 			temp = temp->right;
 		}
-		StudInf *value = temp->data; // getting the phrase from temp
+
+		StudInf *student = temp->student; // getting the student from temp
+		string sarr[] = student; // new string array = student
 
 		if (temp->left == NULL){ // checks if temp has a left child
 			removeNoKids(temp);
@@ -127,8 +129,10 @@ TNode *BST::remove(string last, string first){ // changed parameters to take in 
 			removeOneKid(temp, true);
 		}
 
-		if (root == tmp){  // if the node with data s is tmp
-			root = new TNode(value->phrase); // make root a new node with the value from above
+		if (root == tmp){  // if the node with students first and last name is tmp
+
+			root = new TNode(sarr); // make root a new node with the value from above
+
 			root->left = tmp->left; //
 			root->right = tmp->right;
 			if (tmp->left){
@@ -138,7 +142,7 @@ TNode *BST::remove(string last, string first){ // changed parameters to take in 
 			}
 			setHeight(root);
 		} else if (tmp->parent->left == tmp){
-			tmp->parent->left = new TNode(value->phrase);
+			tmp->parent->left = new TNode(sarr);
 			if(tmp->left){
 				tmp->left->parent = tmp->parent;
 				tmp->parent->left->left = tmp->left;
