@@ -46,17 +46,17 @@ bool BST::insert(string sarr[]){
 				} else {
 					n = n->right;
 				}
-			} else if (sarr[0] == n->student->last){
-				if (sarr[3] < n->student->last){
+			} else if (sarr[0] == n->student->last){  // if the last names are equal, then it does the same insert algorithm
+				if (sarr[3] < n->student->last){ // but instead compares the first names (sarr[3] is first name)
 					if (n->left == NULL){
 						n->left = new TNode(sarr);
 						n->left->parent = n;
 						setHeight(n);
 						return true;
 					} else {
-						n = n->left
+						n = n->left;
 					}
-				} else if (sarr[3] > n->student->last){
+				} else if (sarr[3] > n->student->first){
 					if (n->right == NULL){
 						n->right = new TNode(sarr);
 						n->right->parent = n;
@@ -76,14 +76,28 @@ bool BST::insert(string sarr[]){
 
 // following pseudocode via slides
 
-TNode *BST::find(string s){
+TNode *BST::find(string last, string first){
+	int count = 0; // counting the comparisons
 	TNode *tmp = root; // setting a new node tmp to the root
 	while (tmp){
-		if (tmp->student->last == s){ // just break out of loop if the phrase of tmp is the parameter
-			break;
-		} else if (s < tmp->student->last){ // if string 's' is less than roots data, tmp points to left child
+		if (tmp->student->last == last){ // if student field's last name is equal then compare first names
+			count++; // updates count for each comparison
+			if(tmp->student->first == first){
+				count++;
+				break; // just break out of loop if the phrase if tmps student first and last are both the same
+			} else if (first < tmp->student->first){ // tmp now updates and points to left child if the first name is less than student's first
+				count++;
 				tmp = tmp->left;
-		} else if (s > tmp->student->last){ // if string 's' is less than roots data, tmp points to right child
+			} else if (first > tmp->student->first){ // if student's first name is greater than tnodes student first
+				count++;
+				tmp = tmp->right; // tmp updates and now points to tmps right child
+			}
+
+		} else if (last < tmp->student->last){ // if string 's' is less than roots data, tmp points to left child
+			count++;
+			tmp = tmp->left;
+		} else if (last > tmp->student->last){ // if string 's' is less than roots data, tmp points to right child
+			count++;
 			tmp = tmp->right;
 		}
 	}
@@ -91,8 +105,8 @@ TNode *BST::find(string s){
 }
 
 
-TNode *BST::remove(string s){
-	TNode *tmp = find(s); // finding the node with data s, setting tmp to that node
+TNode *BST::remove(string last, string first){ // changed parameters to take in a first and last name
+	TNode *tmp = find(last, first); // finding the node with the proper first and last name, setting tmp to that node
 	if (tmp->left == NULL && tmp->right == NULL){ // no kids
 		removeNoKids(tmp);
 	} else if (tmp->right == NULL){
