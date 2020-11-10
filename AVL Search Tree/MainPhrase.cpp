@@ -11,8 +11,8 @@ using namespace std;
 
 int main() {
 /************Part 1 - before you've added in the balancing and rotations *****/
-//	StudentTreeInfo *studtree = new StudentTreeInfo("TestRightLeft.txt");
-//	cout << "************************************" << endl;
+	StudentTreeInfo *studtree = new StudentTreeInfo("TestRightLeft.txt");
+	cout << "************************************" << endl;
 /************End of Part 1*********************/
 
 
@@ -85,9 +85,9 @@ int main() {
 //	delete studtree;
 
 /*****And now for the big tree!!!  Part 7 *************/
-	StudentTreeInfo *studtree = new StudentTreeInfo("StudentAnswers.txt");
-	studtree->Interface();
-	return 0;
+//	StudentTreeInfo *studtree = new StudentTreeInfo("StudentAnswers.txt");
+//	studtree->Interface();
+//	return 0;
 }
 
 

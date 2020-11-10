@@ -120,8 +120,14 @@ TNode *BST::remove(string last, string first){ // changed parameters to take in 
 			temp = temp->right;
 		}
 
-		StudInf *student = temp->student; // getting the student from temp
-		string sarr[] = student; // new string array = student
+		string student[10];
+		student[0] = temp->student->last;
+		student[1] = temp->student->strange;
+		student[2] = temp->student->ate;
+		student[3] = temp->student->first;
+		student[4] = temp->student->dessert;
+		student[5] = temp->student->invent; // getting the student from temp new string array = student
+
 
 		if (temp->left == NULL){ // checks if temp has a left child
 			removeNoKids(temp);
@@ -131,7 +137,7 @@ TNode *BST::remove(string last, string first){ // changed parameters to take in 
 
 		if (root == tmp){  // if the node with students first and last name is tmp
 
-			root = new TNode(sarr); // make root a new node with the value from above
+			root = new TNode(student); // make root a new node with the value from above
 
 			root->left = tmp->left; //
 			root->right = tmp->right;
@@ -142,7 +148,7 @@ TNode *BST::remove(string last, string first){ // changed parameters to take in 
 			}
 			setHeight(root);
 		} else if (tmp->parent->left == tmp){
-			tmp->parent->left = new TNode(sarr);
+			tmp->parent->left = new TNode(student);
 			if(tmp->left){
 				tmp->left->parent = tmp->parent;
 				tmp->parent->left->left = tmp->left;
@@ -299,9 +305,7 @@ void BST::printTreeIO() {
 	}
 	else {
 		cout << endl<<"Printing In Order:" <<endl;
-		printTreeIO(root->left);
-		cout << root->student << " ";
-		printTreeIO(root->right);
+		printTreeIO(root);
 	}
 }
 
