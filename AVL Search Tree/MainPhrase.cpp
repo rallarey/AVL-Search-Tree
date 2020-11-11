@@ -11,15 +11,15 @@ using namespace std;
 
 int main() {
 /************Part 1 - before you've added in the balancing and rotations *****/
-	StudentTreeInfo *studtree = new StudentTreeInfo("TestRightLeft.txt");
-	cout << "************************************" << endl;
+//	StudentTreeInfo *studtree = new StudentTreeInfo("TestRightLeft.txt");
+//	cout << "************************************" << endl;
 /************End of Part 1*********************/
 
 
 /************Part 2 - for testing left rotations *****/
 /* Please comment out part 1 before testing this part */
-//	StudentTreeInfo *studtree = new StudentTreeInfo("Testleft.txt");
-//	cout << "************************************" << endl;
+	StudentTreeInfo *studtree = new StudentTreeInfo("Testleft.txt");
+	cout << "************************************" << endl;
 //	studtree->tree->clearTree();
 //
 //	delete studtree;

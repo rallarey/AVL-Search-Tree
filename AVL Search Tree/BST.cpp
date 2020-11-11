@@ -20,6 +20,8 @@ BST::BST(string sarr[]) {
 }
 
 bool BST::insert(string sarr[]){
+
+
 	TNode *n = new TNode(); // n new node
 	if (root == NULL){
 		root = new TNode(sarr);
@@ -165,19 +167,6 @@ TNode *BST::remove(string last, string first){ // changed parameters to take in 
 }
 
 TNode *BST::removeNoKids(TNode *tmp){
-//	if (tmp->left == NULL && tmp->right == NULL){ //i think they check this in remove method
-//		if (tmp->data->phrase > tmp->parent->data->phrase){ // if data in tmp is greater than parents data, tmp is in the right branch
-//			tmp->parent->right = NULL; // therefore, parents right child points to NULL
-//			return tmp;
-//		} else {
-//			tmp->parent->left = NULL; // if data in tpm is less than, tmp is in the left branch
-//			return tmp; // parents left child should now point to NULL;
-//		}
-//	}
-//	return tmp;
-//}
-
-// remove no kids and remove one kid arent working D:
 
 	if (root == tmp){
 		root = NULL; // if node to be deleted is the root, then root is now NULL
@@ -195,24 +184,6 @@ TNode *BST::removeNoKids(TNode *tmp){
 
 
 TNode *BST::removeOneKid(TNode *tmp, bool leftFlag){
-//	if(leftFlag){ // the one child is to the left of tmp
-//		if(tmp->data->phrase > tmp->parent->data->phrase){ // if tmps data is greater than the parents data, it will be in the right branch
-//			tmp->parent->right = tmp->left; // parents right child will now point to tmps left
-//			return tmp;
-//		} else {
-//			tmp->parent->left = tmp->left; // parents left child points to tmps left
-//			return tmp;
-//		}
-//	} else { // child of node to be removed is to the right
-//		if(tmp->data->phrase > tmp->parent->data->phrase){ // tmp is in right branch of parent
-//			tmp->parent->right = tmp->right; // parent right points to tmps right
-//			return tmp;
-//		} else {
-//			tmp->parent->left = tmp->right; // parents left points to tmps left
-//			return tmp;
-//		}
-//	}
-//}
 
 	TNode *temp = tmp->right; // initialize new TNode to be nodes right
 
@@ -239,29 +210,6 @@ TNode *BST::removeOneKid(TNode *tmp, bool leftFlag){
 }
 
 void BST::setHeight(TNode *n){
-//	int height = 1;
-//	n->height = height;
-//
-//	if (n == NULL){
-//		n->height = 0;
-//	}
-//	if (insert(n->data->phrase) && n->left == NULL && n->right == NULL){ // if insert is true and node is leaf
-//		n->height = 1;
-//	}
-//
-//
-	// actual height algorithm
-//	while (n->parent != NULL){ // stops when you hit the root and parent becomes null
-//		n = n->parent; // sets n to be parent
-//		height++;
-//		if (height > n->height){
-//			n->height = height;
-//		}
-//	}
-
-// for some reason when i use above ^^, code terminates and gives no output
-
-// will re write code
 
 	bool pass = false; // boolean variable to keep track of heights if each node has a valid height
 	if (n->left == NULL && n->right == NULL){ // if it's a leaf
@@ -291,12 +239,85 @@ void BST::setHeight(TNode *n){
 			pass = true;
 		}
 		n->height = t + 1; //nodes height should be child's height + 1
+
 	}
+
+	if (getBalance(n) == -2) {
+		if (getBalance(n->right) == -1){
+			rotateLeft(n);
+		} else if (getBalance(n->right) == 1){
+			rotateRight(n);
+			rotateLeft(n);
+		}
+
+	} else if (getBalance(n) == 2){
+		if (getBalance(n->left) == 1){
+			rotateRight(n);
+		} else if (getBalance(n->right) == -1){
+			rotateLeft(n);
+			rotateRight(n);
+		}
+	}
+
+	// recursive call back to setHeight
 
 	if(n->parent && !pass){ // if everything has valid height, adjust height of parent
-		setHeight(n->parent); // setting the height of the parent
+		n = n->parent;
+		setHeight(n); // setting the height of the parent
 	}
+}
 
+int BST::getBalance(TNode *tmp){
+
+	if (tmp->left != NULL && tmp->right != NULL){
+		return tmp->left->height - tmp->right->height;
+	} else if (tmp->right != NULL){
+		return -tmp->right->height;
+	} else if (tmp->left != NULL){
+		return tmp->left->height;
+	} else {
+		return 0;
+	}
+}
+
+TNode *BST::rotateLeft(TNode *tmp){
+
+	TNode *parent = tmp->parent; // new node for parent
+
+	TNode *x = tmp->right;
+	tmp->right = x->left;
+	x->left = tmp;
+
+	if (parent == NULL){
+		root = x; // x now is the root
+	} else if (tmp == parent->left){ // if tmp is the left child of the parent
+		parent->left = x; // make x the left child
+	} else {
+		parent->right = x;
+	}
+	return x;
+}
+
+TNode *BST::rotateRight(TNode *tmp){
+
+	cout << "rotate right function" << endl;
+
+	TNode *parent = tmp->parent;
+
+	TNode *x = tmp->left;
+	tmp->left = x->right;
+	x->right = tmp;
+
+	cout << "right checkpoint" << endl;
+
+	if (parent == NULL){
+		root = x;
+	} else if (tmp == parent->left){
+		parent->left = x;
+	} else {
+		parent->right = x;
+	}
+	return x;
 }
 
 void BST::printTreeIO() {
