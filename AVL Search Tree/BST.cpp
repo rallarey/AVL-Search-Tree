@@ -49,7 +49,7 @@ bool BST::insert(string sarr[]){
 					n = n->right;
 				}
 			} else if (sarr[0] == n->student->last){  // if the last names are equal, then it does the same insert algorithm
-				if (sarr[3] < n->student->last){ // but instead compares the first names (sarr[3] is first name)
+				if (sarr[3] < n->student->first){ // but instead compares the first names (sarr[3] is first name)
 					if (n->left == NULL){
 						n->left = new TNode(sarr);
 						n->left->parent = n;
@@ -67,9 +67,11 @@ bool BST::insert(string sarr[]){
 					} else {
 						n = n->right;
 					}
+				} else if (sarr[3] == n->student->first){ // first and last are the same
+					break;
 				}
 			} else {
-				return false;
+				break;
 			}
 		}
 	}
@@ -108,62 +110,28 @@ TNode *BST::find(string last, string first){
 
 
 TNode *BST::remove(string last, string first){ // changed parameters to take in a first and last name
-	TNode *tmp = find(last, first); // finding the node with the proper first and last name, setting tmp to that node
-	if (tmp->left == NULL && tmp->right == NULL){ // no kids
-		removeNoKids(tmp);
-	} else if (tmp->right == NULL){
-		removeOneKid(tmp, true); // calls remove one kid with boolean set to true because it has left child
-	} else if (tmp->left == NULL){
-		removeOneKid(tmp, false);  // has right child
-	} else {
-		TNode *temp = tmp->left; // new node set equal to the node with the parameter 's'' left child
 
-		while (temp->right != NULL){ // goes through the right branch, finds the node to replace
+	TNode *tmp = find(last,first); // finding node
+	if (tmp->right == NULL && tmp->left == NULL){ // checking to see if no kids
+		removeNoKids(tmp);
+	} else if (tmp->right == NULL){ // checking if it has a left child
+		removeOneKid(tmp, true); // calls remove one kid with boolean set to true because it has left child
+	} else if (tmp->left == NULL){ // checking right child
+		removeOneKid(tmp, false);  // has right child
+	} else if (tmp->right != NULL && tmp->left != NULL){ // 2 children
+		TNode *temp = tmp;
+		temp = temp->left;
+		while(temp->right != NULL){
 			temp = temp->right;
 		}
-
-		string student[10];
-		student[0] = temp->student->last;
-		student[1] = temp->student->strange;
-		student[2] = temp->student->ate;
-		student[3] = temp->student->first;
-		student[4] = temp->student->dessert;
-		student[5] = temp->student->invent; // getting the student from temp new string array = student
-
-
-		if (temp->left == NULL){ // checks if temp has a left child
+		tmp->student = temp->student;
+		if(temp->left == NULL){
 			removeNoKids(temp);
 		} else {
 			removeOneKid(temp, true);
 		}
-
-		if (root == tmp){  // if the node with students first and last name is tmp
-
-			root = new TNode(student); // make root a new node with the value from above
-
-			root->left = tmp->left; //
-			root->right = tmp->right;
-			if (tmp->left){
-				tmp->left->parent = root;
-			} else if (tmp->right){
-				tmp->right->parent = root;
-			}
-			setHeight(root);
-		} else if (tmp->parent->left == tmp){
-			tmp->parent->left = new TNode(student);
-			if(tmp->left){
-				tmp->left->parent = tmp->parent;
-				tmp->parent->left->left = tmp->left;
-			} else if (tmp->right){
-				tmp->right->parent = tmp->parent;
-				tmp->parent->left->right = tmp->right;
-			}
-			setHeight(tmp->parent->left); // adjusting height
-		}
-		free(tmp);
-		return tmp;
 	}
-	return NULL;
+	return tmp;
 }
 
 TNode *BST::removeNoKids(TNode *tmp){
@@ -211,61 +179,84 @@ TNode *BST::removeOneKid(TNode *tmp, bool leftFlag){
 
 void BST::setHeight(TNode *n){
 
-	bool pass = false; // boolean variable to keep track of heights if each node has a valid height
-	if (n->left == NULL && n->right == NULL){ // if it's a leaf
-		if(n->height == 1){
-			pass = true;
-		}
-		n->height = 1; // set height to 1
+//	bool pass = false; // boolean variable to keep track of heights if each node has a valid height
+//	if (n->left == NULL && n->right == NULL){ // if it's a leaf
+//		if(n->height == 1){
+//			pass = true;
+//		}
+//		n->height = 1; // set height to 1
+//
+//	} else if (n->right == NULL){ // checking if it has a left child
+//		if (n->height == n->left->height + 1){ //nodes height should be child's height + 1
+//			pass = true;
+//		}
+//		n->height = n->left->height + 1; // height calculation
+//
+//	} else if (n->left == NULL){ // checking if it has a right child
+//		if (n->height == n->right->height + 1){ // nodes height should be child's height + 1
+//			pass = true;
+//		}
+//		n->height = n->right->height + 1;
+//
+//	} else { // it has both children
+//		int t = n->left->height; // new variable t that is equal to the height of n nodes child
+//		if (n->right->height > t){ // if the right child's height is greater than left nodes child
+//			t = n->right->height; // left nodes child is now equal to right nodes child
+//		}
+//		if (n->height == t + 1){ // if height of node = child's height + 1
+//			pass = true;
+//		}
+//		n->height = t + 1; //nodes height should be child's height + 1
+//	}
+//	// recursive call back to setHeight
+//	if(n->parent && !pass){ // if everything has valid height, adjust height of parent
+//		n = n->parent;
+//		setHeight(n); // setting the height of the parent
+//	}
 
-	} else if (n->right == NULL){ // checking if it has a left child
-		if (n->height == n->left->height + 1){ //nodes height should be child's height + 1
-			pass = true;
-		}
-		n->height = n->left->height + 1; // height calculation
 
-	} else if (n->left == NULL){ // checking if it has a right child
-		if (n->height == n->right->height + 1){ // nodes height should be child's height + 1
-			pass = true;
-		}
-		n->height = n->right->height + 1;
+// change from recursive to iterative
 
-	} else { // if it doesn't have a child
-		int t = n->left->height; // new variable t that is equal to the height of n nodes child
-		if (n->right->height > t){ // if the right child's height is greater than left nodes child
-			t = n->right->height; // left nodes child is now equal to right nodes child
+	int heightBefore = 0;
+	int heightAfter = 1;
+	while (n != NULL && (heightBefore != heightAfter || heightBefore ==1 )){
+		heightBefore = n->height;
+		if(n->right == NULL && n->left == NULL){
+			n->height = 1;
+		} else if (n->right == NULL){
+			n->height = n->left->height + 1;
+		} else if (n->left == NULL){
+			n->height = n->right->height + 1;
+		} else {
+			if (n->right->height > n->left->height){
+				n->height = n->right->height + 1;
+			} else {
+				n->height = n->left->height + 1;
+			}
 		}
-		if (n->height == t + 1){ // if height of node = child's height + 1
-			pass = true;
-		}
-		n->height = t + 1; //nodes height should be child's height + 1
+		heightAfter = n->height;
 
-	}
-
-	if (getBalance(n) == -2) {
-		if (getBalance(n->right) == -1){
-			rotateLeft(n);
-		} else if (getBalance(n->right) == 1){
+		if (getBalance(n) == 2){
+			if(getBalance(n->left) == -1){
+				rotateLeft(n->left);
+			}
 			rotateRight(n);
+			if(n == root){
+				root = n->parent;
+			}
+		} else if (getBalance(n) == -2){
+			if (getBalance(n->right) == 1){
+				rotateRight(n->right);
+			}
 			rotateLeft(n);
+			if(n == root){
+				root = n->parent;
+			}
 		}
-
-	} else if (getBalance(n) == 2){
-		if (getBalance(n->left) == 1){
-			rotateRight(n);
-		} else if (getBalance(n->right) == -1){
-			rotateLeft(n);
-			rotateRight(n);
-		}
-	}
-
-	// recursive call back to setHeight
-
-	if(n->parent && !pass){ // if everything has valid height, adjust height of parent
 		n = n->parent;
-		setHeight(n); // setting the height of the parent
 	}
 }
+
 
 int BST::getBalance(TNode *tmp){
 
@@ -281,42 +272,133 @@ int BST::getBalance(TNode *tmp){
 }
 
 TNode *BST::rotateLeft(TNode *tmp){
-
 	TNode *parent = tmp->parent; // new node for parent
 
 	TNode *x = tmp->right;
-	tmp->right = x->left;
-	x->left = tmp;
+//	tmp->right = x->left;
+//	x->left = tmp;
+
+	if(x->left != NULL){
+		tmp->right = x->left;
+		x->left->parent = tmp;
+	} else {
+		tmp->right = NULL;
+	}
+
+	// parents
 
 	if (parent == NULL){
-		root = x; // x now is the root
-	} else if (tmp == parent->left){ // if tmp is the left child of the parent
-		parent->left = x; // make x the left child
+		x->parent = NULL;
+		root = x;
 	} else {
-		parent->right = x;
+		x->parent = tmp->parent;
+		if(tmp->parent->right == tmp){
+			tmp->parent->right = x;
+		} else {
+			tmp->parent->left = x;
+		}
 	}
+	x->left = tmp;
+	tmp->parent = x;
+
+	// heights
+
+	if (tmp->left == NULL && tmp->right == NULL){
+		tmp->height = 1;
+	} else if (tmp->left == NULL && tmp->right != NULL){ // has a right child
+		tmp->height = tmp->right->height + 1;
+	} else if (tmp->left != NULL && tmp->right == NULL){ // has a left child
+		tmp->height = tmp->left->height + 1;
+	} else { // it has both children
+		int t = tmp->left->height; // new variable t that is equal to the height of n nodes child
+		if (t > tmp->right->height){
+			tmp->height = tmp->left->height + 1;
+		} else {
+			tmp->height = tmp->right->height + 1;
+		}
+	}
+
+	if (x->left == NULL && x->right == NULL){
+		x->height = 1;
+	} else if (x->left == NULL && x->right != NULL){ // has a right child
+		x->height = x->right->height + 1;
+	} else if (x->left != NULL && x->right == NULL){ // has a left child
+		x->height = x->left->height + 1;
+	} else { // it has both children
+		int t = x->left->height; // new variable t that is equal to the height of n nodes child
+		if (t > x->right->height){ // if the right child's height is greater than left nodes child
+			x->height = x->left->height + 1; // left nodes child is now equal to right nodes child
+		} else {
+
+		} x->height = x->right->height + 1; //nodes height should be child's height + 1
+	}
+
 	return x;
 }
 
 TNode *BST::rotateRight(TNode *tmp){
-
-	cout << "rotate right function" << endl;
-
 	TNode *parent = tmp->parent;
 
 	TNode *x = tmp->left;
-	tmp->left = x->right;
-	x->right = tmp;
+//	tmp->left = x->right;
+//	x->right = tmp;
 
-	cout << "right checkpoint" << endl;
+	if (x->right != NULL){
+		tmp->left = x->right;
+		x->right->parent = tmp;
+	} else {
+		tmp->left = NULL;
+	}
+
+	// parents
 
 	if (parent == NULL){
+		x->parent = NULL;
 		root = x;
-	} else if (tmp == parent->left){
-		parent->left = x;
 	} else {
-		parent->right = x;
+		x->parent = tmp->parent;
+		if (tmp->parent->left == tmp){
+			tmp->parent->left = x;
+		} else {
+			tmp->parent->right = x;
+		}
 	}
+
+	x->right = tmp;
+	tmp->parent = x;
+
+	// updating heights
+
+	if (tmp->left == NULL && tmp->right == NULL){
+		tmp->height = 1;
+	} else if (tmp->left == NULL && tmp->right != NULL){ // has a right child
+		tmp->height = tmp->right->height + 1;
+	} else if (tmp->left != NULL && tmp->right == NULL){ // has a left child
+		tmp->height = tmp->left->height + 1;
+	} else { // it has both children
+		int t = tmp->left->height; // new variable t that is equal to the height of n nodes child
+		if (t > tmp->right->height){
+			tmp->height = tmp->left->height + 1;
+		} else {
+			tmp->height = tmp->right->height + 1;
+		}
+	}
+
+	if (x->left == NULL && x->right == NULL){
+		x->height = 1;
+	} else if (x->left == NULL && x->right != NULL){ // has a right child
+		x->height = x->right->height + 1;
+	} else if (x->left != NULL && x->right == NULL){ // has a left child
+		x->height = x->left->height + 1;
+	} else { // it has both children
+		int t = x->left->height; // new variable t that is equal to the height of n nodes child
+		if (t > x->right->height){ // if the right child's height is greater than left nodes child
+			x->height = x->left->height + 1; // left nodes child is now equal to right nodes child
+		} else {
+
+		} x->height = x->right->height + 1; //nodes height should be child's height + 1
+	}
+
 	return x;
 }
 

@@ -18,8 +18,8 @@ int main() {
 
 /************Part 2 - for testing left rotations *****/
 /* Please comment out part 1 before testing this part */
-	StudentTreeInfo *studtree = new StudentTreeInfo("Testleft.txt");
-	cout << "************************************" << endl;
+//	StudentTreeInfo *studtree = new StudentTreeInfo("Testleft.txt");
+//	cout << "************************************" << endl;
 //	studtree->tree->clearTree();
 //
 //	delete studtree;
@@ -28,7 +28,7 @@ int main() {
 
 /***** Part 3 testing the right-right rotations *****/
 //	cout << "********* Testing right ************" << endl;
-//	studtree = new StudentTreeInfo("TestRight.txt");
+//	StudentTreeInfo *studtree = new StudentTreeInfo("TestRight.txt");
 //	cout << "************************************" << endl;
 //	studtree->tree->clearTree();
 //
@@ -37,7 +37,7 @@ int main() {
 
 /***** Part 4 testing the right-left rotations *****/
 //	cout << "********* Testing rightleft ************" << endl;
-//	studtree = new StudentTreeInfo("TestRightLeft.txt");
+//	StudentTreeInfo *studtree= new StudentTreeInfo("TestRightLeft.txt");
 //	cout << "************************************" << endl;
 //	studtree->tree->clearTree();
 //
@@ -48,7 +48,7 @@ int main() {
 
 /***** Part 5 testing the left-right rotations *****/
 //	cout << "********* Testing leftright ************" << endl;
-//	studtree = new StudentTreeInfo("TestLeftRight.txt");
+//	StudentTreeInfo *studtree = new StudentTreeInfo("TestLeftRight.txt");
 //	cout << "************************************" << endl;
 
 /*********End of Part 5 ***********************/
@@ -57,7 +57,7 @@ int main() {
 //
 /***** Part 6 now testing the removing part *******/
 /* Note: make sure you leave Part 5 in so you have a tree to remove from */
-
+//
 //	cout <<endl<<endl<< "********* Testing Removing ************" << endl;
 //
 //	/***** Removing student with no kids *******/
@@ -66,13 +66,13 @@ int main() {
 //	studtree->tree->printTreeIO();
 //	cout << "************************************" << endl;
 //
-
-	///***** Removing student with one kid *******/
+//
+//	/***** Removing student with one kid *******/
 //		cout << "Removing Node with One Kid (Fabian Fearful)"<<endl;
 //		studtree->tree->remove("Fearful","Fabian");
 //		studtree->tree->printTreeIO();
 //		cout << "************************************" << endl;
-
+//
 ///***** Removing student with two kids *******/
 //		cout << "Removing Node with two kids (Jason Jinx)"<<endl;
 //		studtree->tree->remove("Jinx","Jason");
@@ -85,9 +85,10 @@ int main() {
 //	delete studtree;
 
 /*****And now for the big tree!!!  Part 7 *************/
-//	StudentTreeInfo *studtree = new StudentTreeInfo("StudentAnswers.txt");
-//	studtree->Interface();
-//	return 0;
+
+	StudentTreeInfo *studtree = new StudentTreeInfo("StudentAnswers.txt");
+	studtree->Interface();
+	return 0;
 }
 
 
